@@ -128,7 +128,8 @@ def callback(request):
                         func.sendButtonb(event)
     
                    elif mtext == '@其他資訊':
-                        func.sendCarousel(event)
+                        func.doing(event,text)
+            
 
                    elif mtext[:3] == '###' and len(mtext) > 3:  #處理LIFF傳回的FORM資料
                         func.manageForm(event, mtext, user_id)
