@@ -10,7 +10,8 @@ from linebot.models import TextSendMessage, ImageSendMessage, LocationSendMessag
 from linebot import LineBotApi, WebhookParser
 #from hotelapi.models import booking
 #from hotelapi.models import users
-
+import re
+from urllib.parse import quote
 import datetime
 line_bot_api = LineBotApi(settings.LINE_CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(settings.LINE_CHANNEL_SECRET)
@@ -396,7 +397,21 @@ def sendButtonq(event):  #按鈕樣版
 	    except:
 	        line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
             
-            
+def doing(event,text):
+    patterns = ['你好','hi','hello','哈囉','嗨']
+    r = ['教授最近好嗎','哈囉吳教授 最近很忙嗎','在做實驗室測試','這邊是中正大學','哈囉阿','帥哥 找我嗎?']
+    n = random.randint(0,5)
+    for pattern in patterns:
+        if re.search(pattern,text.lower()):
+                t =  quote(r[n])   #把中文字改成網頁的編碼格式，利用我import進來的urllib.parse模組的quote方法來幫忙我們做到
+                stream_url = 'https://google-translate-proxy.herokuapp.com/api/tts?query='+t+'&language=zh-tw'
+                message = AudioSendMessage(
+                    original_content_url = stream_url,
+                    duration=20000
+                )
+                line_bot_api.reply_message(event.reply_token,message)    
+	    except:
+	        line_bot_api.reply_message(event.reply_token,TextSendMessage(text='發生錯誤！'))
 
 def sendButtonr(event):  #按鈕樣版
 	    try:
